@@ -13,8 +13,8 @@ export const sendMessage = createAsyncThunk(
   'messages/send',
   async (item, thunkAPI) => {
     console.log("sending message");
-    const response = await axios.post(API_BASE() + "api/messages", {
-      message: item.message
+    const response = await axios.post(API_BASE() + "api/message", {
+      message: btoa(item.message)
     });
     console.log("message sent");
     return {
@@ -33,9 +33,12 @@ const messagesSlice = createSlice({
   reducers: {
     setMessage: (state, action) => {
       state.messages = [{
-        message: action.payload.message,
+        message: atob(action.payload.message),
         when: new Date().toUTCString()
       }].concat(state.messages);
+    },
+    setError: (state, action) => {
+      state.error = "";
     }
   },
   extraReducers: {
@@ -54,7 +57,7 @@ const messagesSlice = createSlice({
   }
 })
 
-export const { setMessage } = messagesSlice.actions;
+export const { setMessage, setError } = messagesSlice.actions;
 
 export const selectMessages = state => state.messages.messages;
 export const selectLoading = state => state.messages.loading;

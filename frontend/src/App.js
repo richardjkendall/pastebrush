@@ -5,6 +5,8 @@ import './App.css';
 import Typography from '@mui/material/Typography';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
+import Snackbar from '@mui/material/Snackbar';
+import MuiAlert from '@mui/material/Alert';
 
 import { 
   selectMessages, 
@@ -12,15 +14,21 @@ import {
   selectLoading,
   sendMessage,
   setMessage,
+  setError,
   API_BASE
 } from './features/messages/messagesSlice';
 
 import MessageDisplay  from './features/messages/MessageDisplay';
 
+const Alert = React.forwardRef(function Alert(props, ref) {
+  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+});
+
 function App() {
   const dispatch = useDispatch()
   const loading = useSelector(selectLoading);
   const messages = useSelector(selectMessages);
+  const error = useSelector(selectError);
 
   /* state items */
   const [loadPage] = useState(0);
@@ -36,7 +44,6 @@ function App() {
 
   useEffect(() => {
     console.log("on page load");
-
     registerEventStream((e) => {
       console.log("got an event", e);
       dispatch(setMessage({
@@ -47,15 +54,13 @@ function App() {
 
   const triggerSend = () => {
     console.log("in triggerSend");
-
     dispatch(sendMessage({
       message: message
     }));
-
     setDraftMessage("");
   }
 
-  const messagesForDisplay = messages.map(message => <MessageDisplay key={message.when} message={message.message} ts={message.when} />)
+  const messagesForDisplay = messages.map(message => <MessageDisplay key={message.when + message.message} message={message.message} ts={message.when} />)
 
   return (
     <div className="App">
@@ -77,6 +82,12 @@ function App() {
         {messagesForDisplay}
       </div>
 
+      <Snackbar open={error !== ""} autoHideDuration={6000} onClose={() => {dispatch(setError(""))}}>
+        <Alert onClose={() => {dispatch(setError(""))}} severity="error" sx={{ width: '100%' }}>
+          {error}
+        </Alert>
+      </Snackbar>
+      
     </div>
   );
 }
