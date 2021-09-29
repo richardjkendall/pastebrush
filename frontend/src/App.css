@@ -1,0 +1,20 @@
+.App {
+  padding: 20px;
+}
+
+.App #clipform {
+  padding-top: 20px;
+}
+
+.App #clipboard {
+  width: 600px;
+}
+
+.App #messageslist {
+  padding-top: 20px;
+  width: calc(100vw - 40px);
+}
+
+.App #send {
+  margin-left: 20px;
+}
