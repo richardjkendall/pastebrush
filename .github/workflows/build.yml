@@ -1,0 +1,35 @@
+name: build and push to private docker registry
+
+# Controls when the action will run. 
+on:
+  # Triggers the workflow on push or pull request events but only for the master branch
+  push:
+    branches: [ main ]
+    paths-ignore:
+      - README.md
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      
+      - name: Build UI
+        run: |
+          cd frontend
+          npm ci
+          npm run build
+          cd ..
+      
+      - name: Log into registry
+        run: echo ${{secrets.DOCKER_PASSWORD}} | docker login docker.richardjameskendall.com -u pastebrushbuild --password-stdin
+      
+      - name: build and push
+        run: |
+          docker build -t pastebrush .
+          docker tag pastebrush:latest docker.richardjameskendall.com/pastebrush:latest
+          docker push docker.richardjameskendall.com/pastebrush:latest
