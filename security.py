@@ -21,13 +21,14 @@ def secured(f):
     logger.debug("Details passed to the secured decorator", extra={"headers": request.headers})
     if "x-remote-user" in request.headers:
       username = request.headers["x-remote-user"]
+      logger.info(f"User is {username}")
       if "x-remote-user-groups" in request.headers:
         groups = request.headers["x-remote-user-groups"]
         logger.info(f"Groups from header: {groups}")
         groups = groups.split(",")
         return f(username, groups, *args, **kwargs)
       else:
-        logger.info("X-Remote-User-Groups header is missing from request, so allowing all access")
+        logger.info("X-Remote-User-Groups header is missing from request")
         return f(username, [], *args, **kwargs)
     else:
       logger.info("X-Remote-User header is missing from request")
