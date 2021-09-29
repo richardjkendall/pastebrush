@@ -13,12 +13,13 @@ export const sendMessage = createAsyncThunk(
   'messages/send',
   async (item, thunkAPI) => {
     console.log("sending message");
-    const response = await axios.post(API_BASE() + "api/message", {
+    const response = await axios.post(API_BASE() + "api/messages", {
       message: btoa(item.message)
     });
     console.log("message sent");
     return {
-      sending: true
+      sending: true,
+      response: response
     }
   }
 )
