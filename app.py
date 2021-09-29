@@ -9,7 +9,7 @@ from messages import MessageAnnouncer
 
 app = Flask(__name__,
             static_url_path="/",
-            static_folder="frontend/build")
+            static_folder="static")
 CORS(app)
 
 # set logging
