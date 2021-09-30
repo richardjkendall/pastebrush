@@ -37,15 +37,12 @@ function App() {
   const registerEventStream = function(cb) {
     const sse = new EventSource(API_BASE() + "api/messages");
     sse.addEventListener("message", function(e) {
-      console.log(e.data);
       cb(e.data);
     });
   }
 
   useEffect(() => {
-    console.log("on page load");
     registerEventStream((e) => {
-      console.log("got an event", e);
       dispatch(setMessage({
         message: e
       }));
@@ -53,7 +50,6 @@ function App() {
   }, [loadPage, dispatch]);
 
   const triggerSend = () => {
-    console.log("in triggerSend");
     dispatch(sendMessage({
       message: message
     }));

@@ -12,14 +12,12 @@ export var API_BASE = function() {
 export const sendMessage = createAsyncThunk(
   'messages/send',
   async (item, thunkAPI) => {
-    console.log("sending message");
     const response = await axios.post(API_BASE() + "api/messages", {
       message: btoa(item.message)
     });
-    console.log("message sent");
     return {
       sending: true,
-      response: response
+      status: response.status
     }
   }
 )
@@ -44,7 +42,6 @@ const messagesSlice = createSlice({
   },
   extraReducers: {
     [sendMessage.fulfilled]: (state, action) => {
-      console.log("filled");
       state.loading = "idle";
       state.error = "";
     },
