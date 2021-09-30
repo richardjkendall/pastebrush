@@ -24,6 +24,7 @@ ADD frontend/build /app/static
 
 # copy in apache conf
 COPY conf.d/000-default.conf /etc/apache2/sites-available/000-default.conf
+COPY conf.d/ports.conf /etc/apache2/ports.conf
 
 # expose HTTP port
 EXPOSE 5000
